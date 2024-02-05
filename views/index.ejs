@@ -1,0 +1,21 @@
+<%- include("./partials/header.ejs") %>
+
+<% if(!locals.search) {%>
+<div class="card">
+    <form action="/search" method="POST">
+        <img src="./images/detectiveDoggo.png" alt="A detective dog" id="doggo">
+        <div class="searchInp">
+            <select name="type">
+                <option value="anime">Anime</option>
+                <option value="character">Character</option>
+              </select>
+            <input type="text" id="secretInput" name="secret">
+        </div>
+        <input type="submit" class="searchBtn" value="Search">
+    </form>
+<%} else{%>
+
+<%}%>
+</div>
+
+<%- include("./partials/footer.ejs") %>

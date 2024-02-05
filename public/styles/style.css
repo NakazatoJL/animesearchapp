@@ -1,0 +1,89 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #0C356A;
+}
+
+.navParent{
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav{
+    list-style-type: none;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-right: 1rem;
+}
+
+.navItem{
+    display: block;
+    color: #FFC436;
+    text-decoration: none;
+}
+
+.card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.searchBtn{
+    background-color: #FFC436;
+    color: black;
+    border: transparent;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+.searchInp{
+    display: inline;
+    background-color: #FFF0CE;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-right: 0.3rem;
+}
+
+.searchInp input{
+    background-color: transparent;
+    width: 25rem;
+    border: none;
+    border-left: thin solid black;
+    outline: none;
+    padding-left: 0.3rem;
+}
+
+.searchInp select{
+    background-color: transparent;
+    border: none;
+    padding: 0 0.5em 0 0.5em;
+    outline: none;
+}
+
+
+.searchInp select option{
+    background-color: #FFF0CE;
+    border: none;
+    padding: 0 0.5em 0 0.5em;
+}
+
+.hidden{
+    display: none;
+}
+
+#doggo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+
+#title{
+    font-size: xx-large;
+    margin-top: 0.7rem;
+    margin-left: 1rem;
+    color: #FFC436;
+    text-decoration: none;
+}
