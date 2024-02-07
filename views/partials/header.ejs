@@ -12,7 +12,9 @@
             <a href="/" id="title">Anime Search</a>
             <ul class="nav">
                 <li><button class="navToggle hidden"><img src="./images/list.svg" alt="Menu icon"></button></li>
+                <% if(!(page.type === "home")){%>
                 <li><a href="/" class="navItem">Home</a></li>
+                <%} %>
                 <li><a href="/about" class="navItem">About</a></li> 
                 <li><a href="/faq" class="navItem">FAQ</a></li>
             </ul>

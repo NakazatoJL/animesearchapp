@@ -4,6 +4,14 @@ body{
     background-color: #0C356A;
 }
 
+h1,h2,h3,h4,h5,h6,p, a{
+    color: #FFC436;
+}
+
+a{
+    text-decoration:underline;
+}
+
 .navParent{
     display: flex;
     justify-content: space-between;
@@ -73,6 +81,10 @@ body{
     display: none;
 }
 
+#content{
+    padding: 1rem;
+}
+
 #doggo{
     display: block;
     margin-left: auto;
@@ -86,4 +98,13 @@ body{
     margin-left: 1rem;
     color: #FFC436;
     text-decoration: none;
+}
+
+#profilePic{
+    width: 200px;
+    border-radius: 50%;
+    float: right;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    border: solid #FFC436;
 }
