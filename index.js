@@ -11,10 +11,15 @@ app.use(express.static('public'));
 
 const page = {
     type: "none",
+    content: null,
+    searchType: null,
+    error: null,
 };
 
 app.get("/", (req, res) =>{
     page.type = "home";
+    page.content = null;
+    page.error = null;
     res.render("index.ejs", {page});
 });
 
@@ -30,23 +35,67 @@ app.get("/faq", (req, res) =>{
 
 app.post("/search", async(req, res) =>{
     console.log("type:" + req.body.type + " search:" + req.body.search);
+    page.type= "search"
+
+    if(req.body.type === 'anime'){
+        page.content = await animeSearch(req.body.search);
+        page.searchType= "anime";
+        if(page.content === "Error")
+        {
+            page.type = "home";
+            page.content = null;
+            page.error = "No Results";
+            res.render("index.ejs", {page});
+        }else{
+            page.error = null;
+            res.render("index.ejs", {page});
+        }
+
+    } else {
+        page.content = await characterSearch(req.body.search);
+        page.searchType= "character";
+        if(page.content === "Error")
+        {
+            page.type = "home";
+            page.content = null;
+            page.error = "No Results";
+            res.render("index.ejs", {page});
+        }else{
+            page.error = null;
+            res.render("index.ejs", {page});
+        }
+    }
+
+});
+
+app.listen(port, ()=>{
+    console.log(`App is listening to port ${port}`);
+});
+
+async function animeSearch(search){
 
     var query = `
     query ($search: String) {
         Media (search: $search, type: ANIME, sort: FAVOURITES_DESC) {
-            id
             title {
                 romaji
                 english
                 native
-                }
-            type
+            }
+            description(asHtml: true)
+            coverImage{
+                extraLarge
+            }
+            source
+            status
+            episodes
+            genres
         }
     }
     `;
 
     var variables = {
-        search: req.body.search,
+        search: search,
     };
 
     const data = {
@@ -74,23 +123,75 @@ app.post("/search", async(req, res) =>{
       });
 
         console.log(result.data.data.Media);
+        return result.data.data.Media;
 
       } catch (error) {
-        //res.render("index.ejs", { content: JSON.stringify(error.response.data) });
         console.log(error.message);
+        return "Error";
       }
-      /*
-      const result = await axios({
+}
+
+async function characterSearch(search){
+    
+    var query = `
+    query ($search: String) {
+        Character (search: $search, sort: FAVOURITES_DESC) {
+            name{
+                first
+                middle
+                last
+                alternative
+            }
+            description (asHtml: true)
+            image{
+                large
+            }
+            gender
+            dateOfBirth{
+                month
+                day
+            }
+            age
+            bloodType
+
+        }
+    }
+    `;
+
+    var variables = {
+        search: search,
+    };
+
+    const data = {
+        query: query,
+        variables: variables
+    };
+
+    console.log(variables);
+
+    var url = 'https://graphql.anilist.co';
+
+    const headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      };
+
+    // Make the HTTP Api request
+    
+    try {
+        const result = await axios({
         url,
         method: 'post',
         headers,
         data: data
-      }).catch((err) => console.log(err.message));
+      });
 
-      console.log(result.data.data.Page.media);
-      */
-});
+        console.log(result.data.data.Character);
+        return result.data.data.Character;
 
-app.listen(port, ()=>{
-    console.log(`App is listening to port ${port}`);
-});
+      } catch (error) {
+        console.log(error.message);
+        return "Error";
+      }
+
+}

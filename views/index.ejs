@@ -1,11 +1,32 @@
 <%- include("./partials/header.ejs") %>
 
-<% if(!locals.search) {%>
-<div class="card">
+
+<% if(!locals.page.content) {%>
+    <% if(locals.page.error) { %>
+    <div class="card" id="homeCard" style="height: 80vh;">
+    <%} else {%>
+    <div class="card" style="height: 80vh;"> 
+    <%}%>  
+        <form action="/search" method="POST">
+            <img src="./images/detectiveDoggo.png" alt="A detective dog" id="doggo">
+            <div class="searchInp">
+                <select name="type" id="searchSelect">
+                    <option value="anime">Anime</option>
+                    <option value="character">Character</option>
+                </select>
+                <input type="text" id="searchInput" name="search" placeholder="Type your search here">
+            </div>
+            <input type="submit" class="searchBtn" value="Search">
+        </form>
+        <% if(locals.page.error) { %>
+        <h4><%= page.error %></h4>
+        <%} %>
+    </div>
+<%} else if(page.searchType === "anime"){%>
+<div class="card2">
     <form action="/search" method="POST">
-        <img src="./images/detectiveDoggo.png" alt="A detective dog" id="doggo">
         <div class="searchInp">
-            <select name="type">
+            <select name="type" id="searchSelect">
                 <option value="anime">Anime</option>
                 <option value="character">Character</option>
               </select>
@@ -13,9 +34,135 @@
         </div>
         <input type="submit" class="searchBtn" value="Search">
     </form>
-<%} else{%>
+    <% // Format media data and check for any null values ruling them out
+        var mediaTitle, titleType = 0, mediaDescription, mediaImage;
+        if(!(page.content.title.romaji === null)){mediaTitle = page.content.title.romaji}
+        else if(!(page.content.title.english === null)){mediaTitle = page.content.title.english; titleType = 1;}
+        else if(!(page.content.title.native === null)){mediaTitle = page.content.title.native; titleType = 2;}
 
-<%}%>
+        mediaDescription = page.content.description;
+        mediaImage = page.content.coverImage.extraLarge;
+        
+        var extras = {
+            source: "Source: ?",
+            status: "Status: ?",
+            episodes: "Episodes: ?",
+            genres: [],
+        };
+        if(!(page.content.source === null)){extras.source = "Source: " + page.content.source.charAt(0) + page.content.source.slice(1).toLowerCase()};
+        if(!(page.content.status === null)){extras.status = "Status: " + page.content.status.charAt(0) + page.content.status.slice(1).toLowerCase()};
+        if(!(page.content.episodes === null)){extras.episodes = "Episodes: " + page.content.episodes};
+        if(!(page.content.genres === null)){extras.genres = page.content.genres};
+        %>
+        <div class="card">
+            <div class="card3">
+                <div id="searchHeader">
+                    <h2 style="margin: 0;"><%= mediaTitle %></h2>
+                    <% 
+                    var alternativeString = null;
+                    if(!(page.content.title.english === null) && titleType < 1){alternativeString = page.content.title.english};
+                    if(!(page.content.title.native === null) && titleType < 2){
+                        if(titleType === 1){
+                            alternativeString = page.content.title.native;
+                        } else{
+                            alternativeString += ', ' + page.content.title.native;
+                        }
+                    };
+                    %>
+                    <% if(!(alternativeString === null)){ %>
+                    <h4 style="margin-top: 0.2rem;"><%= alternativeString %></h4>
+                    <% } %>
+                    
+                </div>
+                <img src=<%= mediaImage %> alt="An image of the character" id="searchImg">
+                <div id="searchDescription">
+                    <%- mediaDescription %>
+                </div>
+                <div id="searchExtras">
+                    <p><%= extras.source%></p>
+                    <p><%= extras.status%></p>
+                    <p><%= extras.episodes%></p>
+                    <% if(!(extras.genres === null)){ %>
+                        <p style="margin-bottom: 0.3rem;">Genres:</p>
+                        <ul id="searchList">
+                        <%for (let i = 0; i < extras.genres.length; i++) {%>
+                            <li><%= extras.genres[i] %></li>
+                        <%} %>
+                        </ul>
+                    <% } %>
+                </div>
+            </div>
+        </div>
 </div>
+<%}else{%>
+    <div class="card2">
+        <form action="/search" method="POST">
+            <div class="searchInp">
+                <select name="type" id="searchSelect">
+                    <option value="anime">Anime</option>
+                    <option value="character">Character</option>
+                  </select>
+                <input type="text" id="searchInput" name="search" placeholder="Type your search here">
+            </div>
+            <script>
+                const $select = document.querySelector('#searchSelect');
+                $select.value = 'character';
+            </script> 
+            <input type="submit" class="searchBtn" value="Search">
+        </form>
+        <% // Format character data and check for any null values ruling them out
+        var characterName, characterDescription, characterImage;
+        characterName = page.content.name.first;
+        if(!(page.content.name.middle === null)){characterName+= ' ' + page.content.name.middle};
+        if(!(page.content.name.last === null)){characterName+= ' ' + page.content.name.last};
+        characterDescription = page.content.description;
+        characterImage = page.content.image.large;
+        var extras = {
+            gender: "Gender: ?",
+            dateOfBirth: "Birthday: ?",
+            age: "Age: ?",
+            bloodType: "Blood Type: ?",
+        };
+        if(!(page.content.gender === null)){extras.gender = "Gender: " + page.content.gender};
+        if(!(page.content.dateOfBirth.month === null && page.content.dateOfBirth.day === null)){extras.dateOfBirth = `Birthday: ${page.content.dateOfBirth.month}/${page.content.dateOfBirth.day}`};
+        if(!(page.content.age === null)){extras.age = "Age: " + page.content.age};
+        if(!(page.content.bloodType === null)){extras.bloodType = "Blood Type: " + page.content.bloodType};
+        %>
+        <div class="card">
+            <div class="card3">
+                <div id="searchHeader">
+                    <h2 style="margin: 0;"><%= characterName %></h2>
+                    <% 
+                    var alternativeString = null;
+                    if(!(page.content.name.alternative === null)){
+                        for (let i = 0; i < page.content.name.alternative.length; i++) {
+                            if(i === 0){
+                                alternativeString = page.content.name.alternative[i];
+                            } else{
+                                alternativeString += ", " + page.content.name.alternative[i];
+                            }
+                        } 
+                    };
+                    %>
+                    <% if(!(alternativeString === null)){ %>
+                    <h4 style="margin-top: 0.2rem;"><%= alternativeString %></h4>
+                    <% } %>
+                    
+                </div>
+                <img src=<%= characterImage %> alt="An image of the character" id="searchImg">
+                <div id="searchDescription">
+                    <%- characterDescription %>
+                </div>
+                <div id="searchExtras">
+                    <p><%= extras.gender%></p>
+                    <p><%= extras.dateOfBirth%></p>
+                    <p><%= extras.age%></p>
+                    <p><%= extras.bloodType%></p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <%}%>
 
 <%- include("./partials/footer.ejs") %>
