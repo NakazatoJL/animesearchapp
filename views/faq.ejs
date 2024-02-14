@@ -1,5 +1,56 @@
 <%- include("./partials/header.ejs") %>
 
-<h2>FAQ</h2>
+<div class="card5">
+<% let id = 0; if(faqExpand[id] === "true") {%>
+    <div>
+        <div class="card4">
+            <h3>What can you search for?</h3>
+            <form action="/expand" method="POST">
+                <input type="hidden" value= <%= id %> name="post_id" />
+                <input type="hidden" value="false" name="expand" />
+                <input type="image" src="./images/icons/up.svg" alt="Expand Button" class="faqIcon"/>
+            </form>
+        </div>
+        <div class="faqContent">
+            <p>You can search for animes and characters of animes by toggling the option on the left of the search bar. Results will be based on the most popular result based on your search input.</p>
+        </div>
+    </div>
+    <% } else{ %>
+        <div class="card4">
+            <h3>What can you search for?</h3>
+            <form action="/expand" method="POST">
+                <input type="hidden" value= <%= id %> name="post_id" />
+                <input type="hidden" value="true" name="expand" />
+                <input type="image" src="./images/icons/down.svg" alt="Expand Button" class="faqIcon"/>
+            </form>
+        </div>
+    <% } %>
+    
+    <% id = 1; if(faqExpand[id] === "true") {%>
+        <div>
+            <div class="card4">
+                <h3>I am searching for a character with the correct name but results are not what I want, what is happening?</h3>
+                <form action="/expand" method="POST">
+                    <input type="hidden" value=<%= id %> name="post_id" />
+                    <input type="hidden" value="false" name="expand" />
+                    <input type="image" src="./images/icons/up.svg" alt="Expand Button" class="faqIcon"/>
+                </form>
+            </div>
+            <div class="faqContent">
+                <p>Since only the "best" result will be provided in some cases extra information like last name (or part of it) might be required.</p>
+            </div>
+        </div>
+    <% } else{ %>
+            <div class="card4">
+                <h3>I am searching for a character with the correct name but results are not what I want, what is happening?</h3>
+                <form action="/expand" method="POST">
+                    <input type="hidden" value=<%= id %> name="post_id" />
+                    <input type="hidden" value="true" name="expand" />
+                    <input type="image" src="./images/icons/down.svg" alt="Expand Button" class="faqIcon"/>
+                </form>
+            </div>
+    <% } %>
+
+</div>
 
 <%- include("./partials/footer.ejs") %>

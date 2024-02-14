@@ -16,6 +16,8 @@ const page = {
     error: null,
 };
 
+var faqExpand = [false, false];
+
 app.get("/", (req, res) =>{
     page.type = "home";
     page.content = null;
@@ -30,7 +32,7 @@ app.get("/about", (req, res) =>{
 
 app.get("/faq", (req, res) =>{
     page.type = "faq";
-    res.render("faq.ejs", {page});
+    res.render("faq.ejs", {page, faqExpand});
 });
 
 app.post("/search", async(req, res) =>{
@@ -66,6 +68,11 @@ app.post("/search", async(req, res) =>{
         }
     }
 
+});
+
+app.post("/expand", (req, res) =>{
+    faqExpand[req.body.post_id] = req.body.expand;
+    res.render("faq.ejs", {page, faqExpand});
 });
 
 app.listen(port, ()=>{
