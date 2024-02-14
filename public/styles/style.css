@@ -4,13 +4,23 @@ body{
     background-color: #0C356A;
 }
 
-h1,h2,h3,h4,h5,h6,p,a,li{
+h1,h2,h3,h4,h5,h6,p,a,li,footer{
     color: #FFC436;
 }
 
 a{
     text-decoration:underline;
 }
+
+footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 0.7rem 0;
+}
+
 
 .navParent{
     display: flex;
